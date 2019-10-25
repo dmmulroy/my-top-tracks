@@ -18,11 +18,6 @@ const App = () => {
         <h2>Discover and share your most played Spotify tracks</h2>
       </header>
       <Switch>
-        <PrivateRoute
-          exact
-          path='/'
-          component={() => <p>Hello Authenitcated World</p>}
-        />
         <Route path='/auth' component={Auth} />
         <PrivateRoute path='/tracks' component={TopTracks} />
         <Redirect to='/auth' />
