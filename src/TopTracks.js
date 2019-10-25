@@ -6,7 +6,7 @@ const TopTracks = () => {
   React.useEffect(() => {
     const fetchTopTracks = async () => {
       const { items } = await fetch(
-        'https://api.spotify.com/v1/me/top/tracks',
+        'https://api.spotify.com/v1/me/top/tracks?limit=50',
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -16,7 +16,10 @@ const TopTracks = () => {
         }
       ).then(res => res.json());
 
-      const tracks = items.map(({ name }) => name);
+      const tracks = items.map(({ name, artists }) => ({
+        name,
+        artist: artists[0].name
+      }));
 
       setTracks(tracks);
     };
@@ -27,8 +30,8 @@ const TopTracks = () => {
   return (
     <div class='content'>
       <ol type='1'>
-        {tracks.map(track => (
-          <li>{track}</li>
+        {tracks.map(({ name, artist }) => (
+          <li>{`${artist}, ${name}`}</li>
         ))}
       </ol>
     </div>
