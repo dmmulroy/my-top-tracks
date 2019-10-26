@@ -28,10 +28,10 @@ const TopTracks = () => {
   }, []);
 
   return (
-    <div class='content'>
+    <div className='content'>
       <ol type='1'>
         {tracks.map(({ name, artist }) => (
-          <li>{`${artist}, ${name}`}</li>
+          <li key={`${artist}, ${name}`}>{`${artist}, ${name}`}</li>
         ))}
       </ol>
     </div>
