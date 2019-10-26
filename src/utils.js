@@ -4,7 +4,7 @@ export const isAuthenticated = () => {
 
   if (!token || !tokenExpiration) return false;
 
-  const tokenExpired = tokenExpiration - Date.now() <= 0;
+  const tokenExpired = Number(tokenExpiration) - Date.now() <= 0;
 
   if (tokenExpired) return false;
 

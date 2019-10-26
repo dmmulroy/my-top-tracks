@@ -8,7 +8,7 @@ const clientId = 'bee21f221b7149cca1c835f8a9e9fa5a';
 const scopes = 'user-top-read playlist-modify-public playlist-modify-private';
 
 const Auth = ({ location }) => {
-  const { access_token, state, expires } = qs.parse(location.hash);
+  const { access_token, state, expires_in } = qs.parse(location.hash);
   const [authenticated, setAuthenticated] = React.useState(isAuthenticated());
 
   React.useEffect(() => {
@@ -16,13 +16,13 @@ const Auth = ({ location }) => {
       localStorage.setItem('token', access_token);
       localStorage.setItem(
         'tokenExpiration',
-        new Date().getTime() + expires * 1000
+        new Date().getTime() + Number(expires_in) * 1000
       );
       setAuthenticated(true);
     } else {
       localStorage.setItem('randomState', Math.random());
     }
-  }, [access_token, expires, state]);
+  }, [access_token, expires_in, state]);
 
   const handleOnClick = () => {
     window.location.href = encodeURI(
