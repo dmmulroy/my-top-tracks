@@ -26,14 +26,26 @@ function TracksView() {
     })
   });
 
+  const handleOnSelect = ({ value }) => {
+    setTimeRange(value);
+  };
+
   const tracks = data ? data.items : [];
 
   return (
     <div className='content'>
-      {/* <Dropdown
-        options={[{ value: TIME_RANGES.short, label: 'Short Term' }]}
-        defaultOption={{ value: TIME_RANGES.short, label: 'Short Term' }}
-      /> */}
+      <Dropdown
+        options={[
+          { value: TIME_RANGES.short, label: 'Short Term (4 weeks)' },
+          { value: TIME_RANGES.medium, label: 'Mid Term (6 months)' },
+          { value: TIME_RANGES.long, label: 'Long Term (all time)' }
+        ]}
+        defaultOption={{
+          value: TIME_RANGES.medium,
+          label: 'Mid Term (6 months)'
+        }}
+        onSelect={handleOnSelect}
+      />
       <Tracks tracks={tracks} />
     </div>
   );
