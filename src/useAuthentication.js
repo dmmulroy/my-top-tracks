@@ -4,7 +4,6 @@ import qs from 'query-string';
 import { isAuthenticated } from './utils';
 
 export function useAuthentication() {
-  // const authenticated = React.useRef(isAuthenticated());
   const { access_token, state, expires_in } = qs.parse(window.location.hash);
 
   const [authenticated, setAuthenticated] = React.useState(isAuthenticated());
@@ -18,7 +17,6 @@ export function useAuthentication() {
         'tokenExpiration',
         new Date().getTime() + Number(expires_in) * 1000
       );
-      // authenticated.current = true;
       setAuthenticated(true);
     } else {
       localStorage.setItem('randomState', Math.random());

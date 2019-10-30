@@ -39,7 +39,6 @@ const App = () => {
           </button>
         )}
         <Switch>
-          {/* <Route path='/auth' component={Auth} /> */}
           <PrivateRoute path='/tracks' component={TopTracks} />
           <Redirect to={authenticated ? '/tracks' : '/'} />
         </Switch>
