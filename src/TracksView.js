@@ -1,49 +1,56 @@
 import React from 'react';
-import { useGet } from 'restful-react';
-import Dropdown from './Dropdown';
+import qs from 'query-string';
 
-const TIME_RANGES = {
-  short: 'short_term',
-  medium: 'medium_term',
-  long: 'long_term'
+import Dropdown from './Dropdown';
+import { useFetch } from './useFetch';
+import { useAuthentication } from './useAuthentication';
+
+const timeRanges = {
+  short: { value: 'short_term', label: 'Short Term (4 weeks)' },
+  medium: { value: 'medium_term', label: 'Mid Term (6 months)' },
+  long: { value: 'long_term', label: 'Long Term (all time)' }
 };
 
 function TracksView() {
-  const [timeRange, setTimeRange] = React.useState(TIME_RANGES.medium);
+  const [timeRange, setTimeRange] = React.useState(timeRanges.medium.value);
+  const { token } = useAuthentication();
+  const fetchOpts = React.useMemo(
+    () => ({
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      }
+    }),
+    [token]
+  );
 
-  const { data, error, loading } = useGet({
-    path: '/me/top/tracks',
-    queryParams: {
+  const { data } = useFetch(
+    `https://api.spotify.com/v1/me/top/tracks?${qs.stringify({
       limit: 50,
       time_range: timeRange
-    },
-    resolve: ({ items = [], ...rest }) => ({
-      ...rest,
-      items: items.map(({ name, artists }) => ({
-        name,
-        artist: artists[0].name
-      }))
-    })
-  });
+    })}`,
+    fetchOpts
+  );
 
   const handleOnSelect = ({ value }) => {
     setTimeRange(value);
   };
 
-  const tracks = data ? data.items : [];
+  const tracks = React.useMemo(() => {
+    if (!data || !data.items) return [];
+
+    return data.items.map(({ name, artists }) => ({
+      name,
+      artist: artists[0].name
+    }));
+  }, [data]);
 
   return (
     <div className='content'>
       <Dropdown
-        options={[
-          { value: TIME_RANGES.short, label: 'Short Term (4 weeks)' },
-          { value: TIME_RANGES.medium, label: 'Mid Term (6 months)' },
-          { value: TIME_RANGES.long, label: 'Long Term (all time)' }
-        ]}
-        defaultOption={{
-          value: TIME_RANGES.medium,
-          label: 'Mid Term (6 months)'
-        }}
+        options={Object.values(timeRanges)}
+        defaultOption={timeRanges.medium}
         onSelect={handleOnSelect}
       />
       <Tracks tracks={tracks} />
