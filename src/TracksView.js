@@ -1,10 +1,11 @@
 import React from 'react';
 import qs from 'query-string';
 
-import Dropdown from './Dropdown';
+// import Dropdown from './Dropdown';
 import { useFetch } from './useFetch';
 import { useAuthentication } from './useAuthentication';
 
+const Dropdown = () => null;
 const timeRanges = {
   short: { value: 'short_term', label: 'Short Term (4 weeks)' },
   medium: { value: 'medium_term', label: 'Mid Term (6 months)' },

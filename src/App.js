@@ -1,10 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
+import { Header, Button } from 'semantic-ui-react';
 
 import PrivateRoute from './PrivateRoute';
-import Modal from './Modal';
+import AuthenticationModal from './AuthenticationModal';
 import { useAuthentication } from './useAuthentication';
 import TracksView from './TracksView';
+
+import styles from './App.module.css';
 
 const clientId = 'bee21f221b7149cca1c835f8a9e9fa5a';
 const scopes = 'user-top-read playlist-modify-public playlist-modify-private';
@@ -28,34 +31,31 @@ const App = () => {
 
   return (
     <Router>
-      <section className='container'>
-        <h1 className='title'>My Top Tracks</h1>
-        <h2 className='subtitle'>
-          Discover and share your most played Spotify tracks
-        </h2>
+      <section className={styles.container}>
+        <header>
+          <Header as='h1'>
+            My Top Tracks
+            <Header.Subheader>
+              Discover and share your most played Spotify tracks
+            </Header.Subheader>
+          </Header>
+        </header>
         {!authenticated && (
-          <button className='button is-primary' onClick={handleOnClick}>
+          <Button primary onClick={handleOnClick}>
             Get Started
-          </button>
+          </Button>
         )}
         <Switch>
           <PrivateRoute path='/tracks' component={TracksView} />
           <Redirect to={authenticated ? '/tracks' : '/'} />
         </Switch>
-        <Modal
-          title={'Authenticate with Spotify'}
-          open={modalOpen}
-          onSubmit={handleOnSubmit}
-          onClose={handleOnClose}
-          onCancel={handleOnClose}
-        >
-          <p>
-            This will navigate you to Spotify to authenticate with their
-            services. Once you have logged in you will be redirected back to My
-            Top Tracks.
-          </p>
-        </Modal>
       </section>
+      <AuthenticationModal
+        open={modalOpen}
+        onSubmit={handleOnSubmit}
+        onCancel={handleOnClose}
+        onClose={handleOnClose}
+      />
     </Router>
   );
 };
